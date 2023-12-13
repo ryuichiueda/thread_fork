@@ -18,24 +18,14 @@ fn main() {
     let t = Instant::now();
     /* フォークして親子が1秒ごとに文字列を読む試みをする */
     match unsafe{unistd::fork()} {
-        Ok(ForkResult::Child) => { //子
+        Ok(child_or_parent) => { //親も子もここにくる
             let s2 = s.clone();
             loop {
                 thread::sleep(time::Duration::from_secs(1));
                 let s = s2.lock().unwrap(); //ロックの取得
-                println!("{}秒後 child: {:?}", t.elapsed().as_secs(), s);
-            }
-        },
-        Ok(ForkResult::Parent {..} ) => { //親
-            let s2 = s.clone();
-            loop {
-                thread::sleep(time::Duration::from_secs(1));
-                let s = s2.lock().unwrap(); //ロックの取得
-                println!("{}秒後 parent: {:?}", t.elapsed().as_secs(), s);
+                println!("{}秒後 {:?}: {:?}", t.elapsed().as_secs(), child_or_parent, s);
             }
         },
         Err(_) => panic!("!"),
     }
-
-
 }
