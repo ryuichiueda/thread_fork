@@ -2,7 +2,6 @@ use std::{time, thread};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 use nix::unistd;
-use nix::unistd::ForkResult;
 
 fn main() {
     let s = Arc::new(Mutex::new(String::new()));
